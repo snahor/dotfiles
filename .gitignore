@@ -1,0 +1,16 @@
+*.py[cod]
+*.o
+*.so
+*.exe
+*.jasper
+*.iso
+*.tar
+*.zip
+*.sqlite
+*.log
+*.class
+*.gem
+Thumbs.db
+.DS_Store
+__pycache__
+local_settings.py

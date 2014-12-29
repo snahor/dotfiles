@@ -14,3 +14,8 @@ Thumbs.db
 .DS_Store
 __pycache__
 local_settings.py
+htmlcov
+dist
+bower_components
+.gitignore
+.ropeproject

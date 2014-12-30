@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+# vim: ft=python
+
+import sys
+import json
+import yaml
+from datetime import datetime, date
+
+
+def datetime_handler(value):
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    return value
+
+
+def main():
+    if len(sys.argv) == 1:
+        infile = sys.stdin
+        outfile = sys.stdout
+    elif len(sys.argv) == 2:
+        infile = open(sys.argv[1], 'rb')
+        outfile = sys.stdout
+    elif len(sys.argv) == 3:
+        infile = open(sys.argv[1], 'rb')
+        outfile = open(sys.argv[2], 'wb')
+    else:
+        raise SystemExit(sys.argv[0] + " [infile [outfile]]")
+
+    with infile:
+        try:
+            obj = yaml.load(infile)
+        except ValueError as e:
+            raise SystemExit(e)
+
+    with outfile:
+        json.dump(obj, outfile, sort_keys=True,
+                  indent=4, separators=(',', ': '),
+                  default=datetime_handler)
+        outfile.write('\n')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,24 @@
+# grunt
+--ignore-dir=build
+--ignore-dir=dist
+--ignore-dir=node_modules
+
+--ignore-dir=.tox
+--ignore-dir=.ropeproject
+
+--ignore-file=is:.gitignore
+
+--type-set=julia:ext:jl
+--type-set=coffee:ext:coffee
+
+--type-set=json:ext:json
+--type-set=txt:ext:txt
+
+--type-set=jinja:ext:jinja,html,j2
+--type-set=haml:ext:haml
+
+--type-set=sass:ext:sass,scss
+--type-set=less:ext:less
+
+--follow
+--sort-files

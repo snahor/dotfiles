@@ -1,0 +1,4 @@
+\set HISTSIZE 2000
+\set HISTCONTROL ignoredups
+\pset null '[NULL]'
+\timing

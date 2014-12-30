@@ -1,0 +1,40 @@
+[user]
+  name = Hans Roman
+  email = hans.r.69@gmail.com
+
+[github]
+  user = snahor
+
+[core]
+  excludesfile = ~/.gitignore
+  pager = less
+
+[alias]
+  ci = commit
+  st = status
+  co = checkout
+  br = branch
+  df = diff
+  pretty-log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  who = shortlog -s --
+  serve = daemon --reuseaddr --verbose --base-path=. --export-all .
+  serve-rp = daemon --reuseaddr --verbose --base-path=. --export-all --enable=receive-pack .
+  untracked = ls-files --other --exclude-standard
+  ignored = ls-files --ignored --exclude-standard --others
+
+[color]
+  ui = auto
+
+[color "status"]
+  added = green
+  changed = magenta
+  untracked = cyan
+
+[url "git@github.com:"]
+  insteadOf = github:
+
+[url "git@gist.github.com:"]
+  insteadOf = gist:
+
+[url "git@bitbucket.org:"]
+  insteadOf = bitbucket:

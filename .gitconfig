@@ -7,7 +7,7 @@
 
 [core]
   excludesfile = ~/.gitignore
-  pager = less
+  pager = less -+X -+F
 
 [alias]
   ci = commit

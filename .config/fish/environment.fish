@@ -3,20 +3,20 @@
 set -gx EDITOR vim
 set -gx TERM "xterm-256color"
 
-# locals
-if test -d ~/.local/bin
-  set -gx PATH ~/.local/bin $PATH
+function _add_to_path
+  if test -d $argv[1]
+    set -gx PATH $argv[1] $PATH
+  end
 end
+
+# locals
+_add_to_path $HOME/.local/bin
 
 # sbt
-if test -d ~/Applications/sbt/bin
-  set -gx PATH $HOME/Applications/sbt/bin $PATH
-end
+_add_to_path $HOME/Applications/sbt/bin
 
 # LightTable
-if test -d ~/Applications/LightTable
-  set -gx PATH $HOME/Applications/LightTable $PATH
-end
+_add_to_path $HOME/Applications/LightTable
 
 # latex
 if test -d ~/texlive/2013
@@ -26,15 +26,14 @@ if test -d ~/texlive/2013
 end
 
 # go
+_add_to_path /usr/local/go/bin
 if test -d $HOME/go
   set -gx GOPATH $HOME/go
   set -gx PATH $GOPATH/bin $PATH
 end
 
 # cabal
-if test -d $HOME/.cabal/bin
-  set -gx PATH $HOME/.cabal/bin $PATH
-end
+_add_to_path $HOME/.cabal/bin $PATH
 
 # rbenv
 if test -d $HOME/.rbenv/bin
@@ -49,16 +48,10 @@ if test -f $HOME/.config/fish/nvm.fish
 end
 
 # smlnj
-if test -d $HOME/smlnj/bin
-  set -gx PATH $HOME/smlnj/bin $PATH
-end
+_add_to_path $HOME/smlnj/bin
 
 # racket
-if test -d $HOME/racket/bin
-  set -gx PATH $HOME/racket/bin $PATH
-end
+_add_to_path $HOME/racket/bin
 
 # Heroku
-if test -d /usr/local/heroku/bin
-  set -gx PATH /usr/local/heroku/bin $PATH
-end
+_add_to_path /usr/local/heroku/bin

@@ -10,6 +10,7 @@ set encoding=utf8
 set termencoding=utf8
 
 set wildignore=*.pyc,*.o,*.swp,*.jasper,*.pdf,*.exe,*.class,*.out,*.aux
+set wildignore+=*.jpg,*.png,*.gif
 set history=100
 set backspace=eol,start,indent
 set colorcolumn=80
@@ -64,6 +65,8 @@ endif
 if has('gui_running')
   set guioptions=ai
   set guifont=Monaco\ 10
+  set lines=999
+  set columns=999
   try
     set background=dark
     colorscheme pencil
@@ -71,6 +74,10 @@ if has('gui_running')
     set background=light
     silent! colorscheme hemisu
   endtry
+else
+  set background=dark
+  let g:solarized_termtrans = 1
+  silent! colorscheme solarized
 endif
 
 function! ToggleComment()
@@ -135,13 +142,13 @@ function! ColorfulStatutLine()
   set statusline+=%6*%(\ %p%%\ :\ %l\ :\ %c\ %)
 
   hi User1 guibg=#E74C3C guifg=#ffffff ctermbg=1
-  hi User2 guibg=#E67E22 guifg=#ffffff ctermbg=9
+  hi User2 guibg=#E67E22 guifg=#ffffff ctermbg=166
   hi User3 guibg=#F1C40F guifg=#ffffff ctermbg=9
-  hi User4 guibg=#34495E guifg=#ffffff ctermbg=9
-  hi User5 guibg=#9B59B6 guifg=#ffffff ctermbg=9
+  hi User4 guibg=#34495E guifg=#ffffff ctermbg=18
+  hi User5 guibg=#9B59B6 guifg=#ffffff ctermbg=129
   hi User6 guibg=#3498DB guifg=#ffffff ctermbg=26
   hi User7 guibg=#2ECC71 guifg=#ffffff ctermbg=9
-  hi User8 guibg=#1ABC9C guifg=#ffffff ctermbg=14
+  hi User8 guibg=#1ABC9C guifg=#ffffff ctermbg=36
   hi User9 guibg=#95A5A6 guifg=#ffffff ctermbg=9
 endfunction
 
@@ -149,6 +156,11 @@ function! GithubTheme()
   set linespace=1
   set guifont=Liberation\ Mono\ 9
   colorscheme oldgithub
+endfunction
+
+function! NoTheme()
+  syntax off
+  hi LineNr ctermfg=white
 endfunction
 
 function! ChangeFontSize(action)
@@ -178,7 +190,8 @@ endfunction
 nmap <silent><Leader><Leader> :let @/ = ""<CR>
 
 " re-source
-nmap <Leader>s :source ~/.config/vim/base.vim<Return>
+"nmap <Leader>s :source ~/.config/vim/base.vim<Return>
+nmap <Leader>s :execute "source ~/" . (exists(':Plug') ? ".vimrc" : ".config/vim/base.vim")<Return>
 
 " trim lines
 nmap <Leader>cs :%s/\s\+$//e<Return>
@@ -212,6 +225,12 @@ nmap <C-S-PageDown> :tabnext<Return>
 " http://stackoverflow.com/a/7192324/94746
 nnoremap <silent> <A-h> :execute 'silent! tabmove ' . (tabpagenr() - 2)<CR>
 nnoremap <silent> <A-l> :execute 'silent! tabmove ' . tabpagenr()<CR>
+
+" fu arrows
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
 
 au FileType html setlocal syntax=OFF
 au FileType htmldjango setlocal syntax=OFF

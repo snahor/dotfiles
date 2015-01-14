@@ -29,6 +29,8 @@ Plug 'paranoida/vim-airlineish'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+
 Plug 'klen/python-mode'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'cypok/vim-sml', { 'for': 'sml' }

@@ -1,0 +1,6 @@
+xterm*faceName: Mono
+xterm*faceSize: 15
+xterm*scrollBar: false
+xterm*scrollBar_right: false
+xterm*background: #111111
+xterm*foreground: #ffffff

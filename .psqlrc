@@ -1,4 +1,12 @@
 \set HISTSIZE 2000
 \set HISTCONTROL ignoredups
+\set COMP_KEYWORD_CASE upper
+\set VERBOSITY verbose
+
+\pset border 2
 \pset null '[NULL]'
+
 \timing
+
+\set now 'SELECT now();'
+\set version 'SELECT version();'

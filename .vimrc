@@ -12,13 +12,17 @@ Plug 'mattn/emmet-vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mkitt/tabline.vim'
 Plug 'tpope/vim-fugitive'
+"Plug 'shougo/unite.vim'
+"Plug 'ujihisa/unite-colorscheme'
 Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'cypok/vim-sml', { 'for': 'sml' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 "Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
-Plug 'morhetz/gruvbox'
+"Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'christophermca/meta5'
+"Plug 'morhetz/gruvbox'
 "Plug 'reedes/vim-colors-pencil'
 "Plug 'noahfrederick/vim-hemisu'
 "Plug 'Pychimp/vim-sol'
@@ -30,9 +34,13 @@ syntax on
 
 let mapleader=','
 let maplocalleader=','
-let os = has('win32') ? 'Windows' : substitute(system('uname'), '\n', '', '')
 
-set encoding=utf8
+let os = has('win32') ? 'Windows' : substitute(system('uname'), '\n', '', '')
+let is_nvim = has('nvim')
+
+if !is_nvim
+  set encoding=utf8
+endif
 set termencoding=utf8
 
 set wildignore=*.pyc,*.o,*.swp,*.jasper,*.pdf,*.exe,*.class,*.out,*.aux
@@ -45,7 +53,6 @@ set colorcolumn=80
 set autoread
 set number
 set lazyredraw
-set encoding=utf8
 set termencoding=utf-8
 set laststatus=2
 
@@ -88,11 +95,12 @@ set splitright
 set showtabline=2
 
 set background=dark
-colorscheme gruvbox
+colorscheme meta5
 
 " silver searcher
 if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
 
 let g:go_play_open_browser = 0
@@ -100,7 +108,11 @@ let g:go_fmt_command = "goimports"
 
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+if has('python3')
+  let g:pymode_python = 'python3'
+endif
+let g:pymode_folding = 0
 
 function! ToggleComment()
   if len(getline('.')) == 0
@@ -117,12 +129,12 @@ function! ToggleComment()
   \  'tex': '%',
   \  'mail': '>',
   \  'scheme': ';'
-  \}, &filetype, escape('//', '\/'))
+  \}, &filetype, '//')
 
   let uncomment = matchstr(getline('.'), '^\s*' . comment_leader) != ''
 
   if uncomment
-    execute ":silent! normal :nohl\<CR>:s/\<C-R>=comment_leader\<CR>//\<CR>:nohl\<CR>"
+    execute ":silent! normal :nohl\<CR>:s/\<C-R>=escape(comment_leader, '\/')\<CR>//\<CR>:nohl\<CR>"
   else
     execute ":silent! normal ^i\<C-R>=comment_leader\<CR>\<ESC>\<down>^"
   endif
@@ -152,7 +164,7 @@ function! ColorfulStatutLine()
   set statusline+=%8*%(\ %<%f%m%r\ %)
 
   " right alignment
-  set statusline+=%= 
+  set statusline+=%=
 
   " type of file : modified flag : RO flag
   set statusline+=%4*%(\ %{&filetype}\ %)
@@ -268,7 +280,10 @@ nmap <silent> <leader>ev :e $MYVIMRC<cr>
 nmap <silent> <leader>eh :e /etc/hosts<cr>
 nmap <silent> <leader>sv :source $MYVIMRC<cr>
 
-if has('nvim')
+if is_nvim
+  let h = winheight(0) * 0.35
+  nnoremap <silent><leader>t :execute string(h).'sp term://fish'<cr>
+
   tnoremap <esc><esc> <C-\><C-n>
   tnoremap <C-h> <C-\><C-n><C-w>h
   tnoremap <C-j> <C-\><C-n><C-w>j
@@ -287,17 +302,27 @@ if &term =~ '^screen'
   ""^[[5;5~
 endif
 
-au FileType html setlocal syntax=OFF
-au FileType htmldjango setlocal syntax=OFF
-au FileType jinja setlocal syntax=OFF
-au FileType python setlocal shiftwidth=4 softtabstop=4 nosmartindent
-au FileType go setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-au FileType c setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-au FileType java setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-au BufRead,BufNewFile *.es6 setfiletype javascript
+augroup ft_config
+  au!
+  au FileType html setlocal syntax=OFF
+  au FileType htmldjango setlocal syntax=OFF
+  au FileType jinja setlocal syntax=OFF
+  au FileType python setlocal shiftwidth=4 softtabstop=4 nosmartindent
+  au FileType go setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
+  au FileType c setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
+  au FileType java setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
+
+  au BufRead,BufNewFile *.es6 setfiletype javascript
+  au BufWritePre *.py,*.js,*.rb :silent! %s/\s\+$//
+augroup END
+
+augroup reload_vimrc
+  au!
+  au BufWritePost .vimrc so $MYVIMRC
+augroup END
 
 autocmd VimResized * =
 
-set autochdir
+call ColorfulStatutLine()
 
-"call ColorfulStatutLine()
+set autochdir

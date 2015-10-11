@@ -52,7 +52,7 @@ function log
   set_color -b $color; echo $argv[2..(count $argv)]
 end
 
-function ipx
+function publicip
   set -l ip
   set -l domains "ip.appspot.com" \
                  "ip.telize.com" \
@@ -109,22 +109,32 @@ function s
 end
 
 
-function hackon
+function __workon_py
   set -l target $HOME/projects/$argv[1]
 
-  if test -d $target
-    if test -f $target/bin/activate.fish
-      . $target/bin/activate.fish
-    end
+  if test -f $target/bin/activate.fish
+    . $target/bin/activate.fish
+  end
 
-    if test -d $target/src
-      cd $target/src
-    else
-      cd $target
-    end
+  if test -d $target/src
+    cd $target/src
+  else
+    cd $target
   end
 end
 
+function __workon_directories
+  ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }'
+  ls -l $GOPATH/src/github.com/snahor/ | grep '^d' | awk '{ print \$9 }'
+end
+
+function workon
+  if test -d $HOME/projects/$argv[1]
+    __workon_py $argv[1]
+  else if test -d $GOPATH/src/github.com/snahor/$argv[1]
+    cd $GOPATH/src/github.com/snahor/$argv[1]
+  end
+end
 
 function mkvenv
   set -l venv_name
@@ -143,7 +153,7 @@ function mkvenv
 
   virtualenv $HOME/projects/$venv_name $venv_params
 
-  hackon $venv_name
+  __workon_py $venv_name
 end
 
 
@@ -151,6 +161,10 @@ function rmvenv
   rm -rf ~/projects/$argv[1]/{lib,bin,include,local}
 end
 
+function hgrep
+  history | grep -v grep | grep -i $argv[1] | sort | uniq
+end
 
-complete -x -c hackon -a "( ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }' )"
+#complete -x -c workon -f -n '__workon_directories'
+complete -x -c workon -a "( ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }' )"
 complete -x -c rmvenv -a "( ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }' )"

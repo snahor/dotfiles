@@ -1,11 +1,11 @@
 set nocompatible
 set shell=/bin/bash
 
-"if empty(glob('~/.vim/autoload/plug.vim'))
-  "silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    "\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  "autocmd VimEnter * PlugInstall
-"endif
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'mattn/emmet-vim'
@@ -14,11 +14,13 @@ Plug 'mkitt/tabline.vim'
 Plug 'tpope/vim-fugitive'
 "Plug 'shougo/unite.vim'
 "Plug 'ujihisa/unite-colorscheme'
+Plug 'shougo/vimproc.vim', { 'do': 'make' }
 Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'cypok/vim-sml', { 'for': 'sml' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+"Plug 'lervag/vimtex', { 'for': 'tex' }
 "Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
 "Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
 Plug 'christophermca/meta5'
@@ -64,6 +66,7 @@ set smarttab
 set autoindent
 set smartindent
 set wrap
+set clipboard=unnamedplus
 
 " highlight current line
 set cursorline
@@ -161,7 +164,8 @@ function! ColorfulStatutLine()
   set statusline+=%2*%(\ %n\ %)
 
   " path
-  set statusline+=%8*%(\ %<%f%m%r\ %)
+  "set statusline+=%8*%(\ %<%f%m%r\ %)
+  set statusline+=%8*%(\ %<%F%m%r\ %)
 
   " right alignment
   set statusline+=%=
@@ -310,7 +314,8 @@ augroup ft_config
   au FileType python setlocal shiftwidth=4 softtabstop=4 nosmartindent
   au FileType go setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
   au FileType c setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-  au FileType java setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
+  "au FileType java setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
+  au FileType java setlocal nosmartindent noexpandtab
 
   au BufRead,BufNewFile *.es6 setfiletype javascript
   au BufWritePre *.py,*.js,*.rb :silent! %s/\s\+$//
@@ -318,10 +323,13 @@ augroup END
 
 augroup reload_vimrc
   au!
-  au BufWritePost .vimrc so $MYVIMRC
+  au BufWritePost .vimrc,.nvimrc so $MYVIMRC
 augroup END
 
-autocmd VimResized * =
+if !is_nvim
+  "autocmd VimResized * =
+  autocmd VimResized * wincmd =
+endif
 
 call ColorfulStatutLine()
 

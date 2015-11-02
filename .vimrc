@@ -24,9 +24,10 @@ Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 "Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
 "Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
 Plug 'christophermca/meta5'
+Plug 'zenorocha/dracula-theme', { 'rtp': 'vim' }
 "Plug 'morhetz/gruvbox'
-"Plug 'reedes/vim-colors-pencil'
-"Plug 'noahfrederick/vim-hemisu'
+Plug 'reedes/vim-colors-pencil'
+Plug 'noahfrederick/vim-hemisu'
 "Plug 'Pychimp/vim-sol'
 "Plug 'vim-scripts/plum.vim'
 "Plug 'Wutzara/vim-materialtheme'
@@ -98,7 +99,7 @@ set splitright
 set showtabline=2
 
 set background=dark
-colorscheme meta5
+colorscheme dracula
 
 " silver searcher
 if executable('ag')
@@ -293,6 +294,7 @@ if is_nvim
   tnoremap <C-j> <C-\><C-n><C-w>j
   tnoremap <C-k> <C-\><C-n><C-w>k
   tnoremap <C-l> <C-\><C-n><C-w>l
+  au WinEnter term://* startinsert
 endif
 
 if &term =~ '^screen'

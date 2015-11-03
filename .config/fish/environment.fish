@@ -3,6 +3,11 @@
 set -gx EDITOR vim
 set -gx TERM "xterm-256color"
 
+# check tmux
+if test $TMUX
+  set -gx TERM "screen-256color"
+end
+
 function _add_to_path
   if test -d $argv[1]
     set -gx PATH $argv[1] $PATH
@@ -42,9 +47,9 @@ if test -d $HOME/.rbenv/bin
 end
 
 # nvm
-if test -f $HOME/.config/fish/nvm.fish
+if test -f $HOME/.config/fish/nvm-fish/nvm.fish
   set -gx NVM_DIR $HOME/.nvm
-  . $HOME/.config/fish/nvm.fish
+  . $HOME/.config/fish/nvm-fish/nvm.fish
 end
 
 # smlnj
@@ -55,3 +60,12 @@ _add_to_path $HOME/racket/bin
 
 # Heroku
 _add_to_path /usr/local/heroku/bin
+
+# app engine
+_add_to_path $HOME/google_appengine
+
+# elm
+_add_to_path $HOME/Elm-Platform/0.15/bin
+
+# coursera's algorithms course
+_add_to_path $HOME/algs4/bin

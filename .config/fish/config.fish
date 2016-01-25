@@ -32,7 +32,7 @@ set fish_greeting ""
 
 # OPAM configuration
 #. /home/hans/.opam/opam-init/init.fish > /dev/null 2> /dev/null or true
-. ~/.opam/opam-init/variables.fish
+#. ~/.opam/opam-init/variables.fish
 
 function _is_xterm
   test -n $XTERM_VERSION
@@ -59,11 +59,14 @@ function fish_prompt
   set -l blue (set_color -o blue)
   set -l green (set_color -o green)
   set -l normal (set_color normal)
+  #set -l prompt "➜"
+  set -l prompt "𝝺"
+  #set -l prompt "😀 "
 
   if test $last_status = 0
-      set arrow "$green➜"
+      set arrow "$green$prompt"
   else
-      set arrow "$red➜"
+      set arrow "$red$propmt"
   end
   set -l cwd $cyan(basename (prompt_pwd))
 
@@ -72,7 +75,7 @@ function fish_prompt
     set git_info "$blue git:($git_branch$blue)"
 
     if [ (_is_git_dirty) ]
-      set -l dirty "$yellow ✗"
+      set -l dirty "$yellow ✗ "
       set git_info "$git_info$dirty"
     end
   end

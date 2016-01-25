@@ -165,6 +165,10 @@ function hgrep
   history | grep -v grep | grep -i $argv[1] | sort | uniq
 end
 
+function docker_ssh
+  docker exec -i -t $argv[1] bash
+end
+
 #complete -x -c workon -f -n '__workon_directories'
 complete -x -c workon -a "( ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }' )"
 complete -x -c rmvenv -a "( ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }' )"

@@ -40,6 +40,9 @@ end
 # cabal
 _add_to_path $HOME/.cabal/bin $PATH
 
+_add_to_path /opt/cabal/1.22/bin
+_add_to_path /opt/ghc/7.10.3/bin
+
 # rbenv
 if test -d $HOME/.rbenv/bin
   set -gx PATH $HOME/.rbenv/bin $PATH
@@ -47,9 +50,11 @@ if test -d $HOME/.rbenv/bin
 end
 
 # nvm
-if test -f $HOME/.config/fish/nvm-fish/nvm.fish
+#if test -f $HOME/.config/fish/nvm-fish/nvm.fish
+if test -f $HOME/.config/fish/nvm.fish
   set -gx NVM_DIR $HOME/.nvm
-  . $HOME/.config/fish/nvm-fish/nvm.fish
+  #. $HOME/.config/fish/nvm-fish/nvm.fish
+  . $HOME/.config/fish/nvm.fish
 end
 
 # smlnj

@@ -15,22 +15,30 @@ Plug 'tpope/vim-fugitive'
 "Plug 'shougo/unite.vim'
 "Plug 'ujihisa/unite-colorscheme'
 Plug 'shougo/vimproc.vim', { 'do': 'make' }
-Plug 'klen/python-mode', { 'for': 'python' }
+"Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'cypok/vim-sml', { 'for': 'sml' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+Plug 'scrooloose/syntastic', { 'for': 'javascript' }
 "Plug 'lervag/vimtex', { 'for': 'tex' }
 "Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
 "Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+"
+" colors
 Plug 'christophermca/meta5'
 Plug 'zenorocha/dracula-theme', { 'rtp': 'vim' }
+Plug 'joshdick/onedark.vim'
 "Plug 'morhetz/gruvbox'
 Plug 'reedes/vim-colors-pencil'
 Plug 'noahfrederick/vim-hemisu'
+Plug 'gilgigilgil/anderson.vim'
+Plug 'romainl/Apprentice'
+Plug 'mhinz/vim-janah'
 "Plug 'Pychimp/vim-sol'
 "Plug 'vim-scripts/plum.vim'
 "Plug 'Wutzara/vim-materialtheme'
+Plug 'KabbAmine/yowish.vim'
 call plug#end()
 
 syntax on
@@ -45,6 +53,7 @@ if !is_nvim
   set encoding=utf8
 endif
 set termencoding=utf8
+
 
 set wildignore=*.pyc,*.o,*.swp,*.jasper,*.pdf,*.exe,*.class,*.out,*.aux
 set wildignore+=*.jpg,*.png,*.gif
@@ -99,7 +108,9 @@ set splitright
 set showtabline=2
 
 set background=dark
-colorscheme dracula
+"colorscheme dracula
+"colorscheme onedark
+colorscheme janah
 
 " silver searcher
 if executable('ag')
@@ -118,6 +129,9 @@ if has('python3')
 endif
 let g:pymode_folding = 0
 
+" jsx on js files
+let g:syntastic_javascript_checkers = ['eslint']
+
 function! ToggleComment()
   if len(getline('.')) == 0
     return
@@ -128,6 +142,11 @@ function! ToggleComment()
   \  'python': '#',
   \  'ruby': '#',
   \  'sh': '#',
+  \  'yaml': '#',
+  \  'conf': '#',
+  \  'dockerfile': '#',
+  \  'gitcommit': '#',
+  \  'make': '#',
   \  'haskell': '--',
   \  'sql': '--',
   \  'tex': '%',
@@ -180,15 +199,15 @@ function! ColorfulStatutLine()
   " percentage : line number : col number
   set statusline+=%6*%(\ %p%%\ :\ %l\ :\ %c\ %)
 
-  hi User1 guibg=#E74C3C guifg=#ffffff ctermbg=1
-  hi User2 guibg=#E67E22 guifg=#ffffff ctermbg=166
-  hi User3 guibg=#F1C40F guifg=#ffffff ctermbg=9
-  hi User4 guibg=#34495E guifg=#ffffff ctermbg=18
-  hi User5 guibg=#9B59B6 guifg=#ffffff ctermbg=129
-  hi User6 guibg=#3498DB guifg=#ffffff ctermbg=26
-  hi User7 guibg=#2ECC71 guifg=#ffffff ctermbg=9
-  hi User8 guibg=#1ABC9C guifg=#ffffff ctermbg=36
-  hi User9 guibg=#95A5A6 guifg=#ffffff ctermbg=9
+  "hi User1 guibg=#E74C3C guifg=#ffffff ctermbg=1
+  "hi User2 guibg=#E67E22 guifg=#ffffff ctermbg=166
+  "hi User3 guibg=#F1C40F guifg=#ffffff ctermbg=9
+  "hi User4 guibg=#34495E guifg=#ffffff ctermbg=18
+  "hi User5 guibg=#9B59B6 guifg=#ffffff ctermbg=129
+  "hi User6 guibg=#3498DB guifg=#ffffff ctermbg=26
+  "hi User7 guibg=#2ECC71 guifg=#ffffff ctermbg=9
+  "hi User8 guibg=#1ABC9C guifg=#ffffff ctermbg=36
+  "hi User9 guibg=#95A5A6 guifg=#ffffff ctermbg=9
 endfunction
 
 function! ChangeFontSize(action)

@@ -22,6 +22,9 @@
   untracked = ls-files --other --exclude-standard
   ignored = ls-files --ignored --exclude-standard --others
 
+[diff]
+  tool = nvim -d
+
 [color]
   ui = auto
 

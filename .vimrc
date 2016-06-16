@@ -1,3 +1,4 @@
+" vim: fdm=marker:sw=2:sts=2:et
 set nocompatible
 set shell=/bin/bash
 
@@ -20,25 +21,38 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'cypok/vim-sml', { 'for': 'sml' }
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'scrooloose/syntastic', { 'for': 'javascript' }
+"Plug 'scrooloose/syntastic', { 'for': 'javascript' }
 "Plug 'lervag/vimtex', { 'for': 'tex' }
 "Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
-"Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+
+Plug 'othree/yajs.vim', { 'for': 'javascript' }
+Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
 "
-" colors
+" colors {{{
 Plug 'christophermca/meta5'
 Plug 'zenorocha/dracula-theme', { 'rtp': 'vim' }
 Plug 'joshdick/onedark.vim'
-"Plug 'morhetz/gruvbox'
+Plug 'morhetz/gruvbox'
 Plug 'reedes/vim-colors-pencil'
-Plug 'noahfrederick/vim-hemisu'
+"Plug 'noahfrederick/vim-hemisu'
+Plug 'snahor/vim-hemisu'
 Plug 'gilgigilgil/anderson.vim'
 Plug 'romainl/Apprentice'
 Plug 'mhinz/vim-janah'
 "Plug 'Pychimp/vim-sol'
-"Plug 'vim-scripts/plum.vim'
-"Plug 'Wutzara/vim-materialtheme'
+Plug 'vim-scripts/plum.vim'
+Plug 'Wutzara/vim-materialtheme'
 Plug 'KabbAmine/yowish.vim'
+Plug 'ewilazarus/preto'
+Plug 'MaxSt/FlatColor'
+Plug 'andreasvc/vim-256noir'
+Plug 'wellsjo/wellsokai.vim'
+Plug 'DrowsySaturn/VIvid.vim'
+Plug 'baskerville/bubblegum'
+Plug 'pbrisbin/vim-colors-off'
+Plug 'w0ng/vim-hybrid'
+" }}}
 call plug#end()
 
 syntax on
@@ -51,6 +65,8 @@ let is_nvim = has('nvim')
 
 if !is_nvim
   set encoding=utf8
+else
+  set termguicolors
 endif
 set termencoding=utf8
 
@@ -110,27 +126,52 @@ set showtabline=2
 set background=dark
 "colorscheme dracula
 "colorscheme onedark
-colorscheme janah
+"colorscheme hemisu
+"colorscheme flatcolor
+"colorscheme pencil
+"colorscheme bubblegum
+colorscheme off
 
-" silver searcher
+" silver searcher {{{
 if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
+" }}}
 
+" go {{{
 let g:go_play_open_browser = 0
 let g:go_fmt_command = "goimports"
+" }}}
 
+" ctrlp {{{
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path = 0
-
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\v[\/](node_modules)$',
+  \ }
+" }}}
+"
+" python {{{
 if has('python3')
   let g:pymode_python = 'python3'
 endif
 let g:pymode_folding = 0
-
+" }}}
+"
+" javascript {{{
 " jsx on js files
 let g:syntastic_javascript_checkers = ['eslint']
+" jsbeautify
+let g:config_Beautifier = {
+\  'js': {
+\    'indent_size': 2,
+\    'trim_trailing_whitespace': 'true',
+\    'indent_style': 'space',
+\    'end_of_line': 'lf',
+\  }
+\}
+" }}}
 
 function! ToggleComment()
   if len(getline('.')) == 0
@@ -151,7 +192,8 @@ function! ToggleComment()
   \  'sql': '--',
   \  'tex': '%',
   \  'mail': '>',
-  \  'scheme': ';'
+  \  'scheme': ';',
+  \  'gitconfig': '#',
   \}, &filetype, '//')
 
   let uncomment = matchstr(getline('.'), '^\s*' . comment_leader) != ''
@@ -171,6 +213,7 @@ function! CurrentMode()
     \ 'n': 'NORMAL',
     \ 'R': 'REPLACE',
     \ 'V': 'V-LINE',
+    \ 't': 'TERMINAL',
     \}, current_mode, current_mode)
 endfunction
 
@@ -304,6 +347,9 @@ nmap <silent> <leader>ev :e $MYVIMRC<cr>
 nmap <silent> <leader>eh :e /etc/hosts<cr>
 nmap <silent> <leader>sv :source $MYVIMRC<cr>
 
+" folding
+vnoremap <silent> <leader>f :fold<cr>
+
 if is_nvim
   let h = winheight(0) * 0.35
   nnoremap <silent><leader>t :execute string(h).'sp term://fish'<cr>
@@ -340,6 +386,8 @@ augroup ft_config
 
   au BufRead,BufNewFile *.es6 setfiletype javascript
   au BufWritePre *.py,*.js,*.rb :silent! %s/\s\+$//
+
+  au FileType vim setlocal foldmethod=marker
 augroup END
 
 augroup reload_vimrc

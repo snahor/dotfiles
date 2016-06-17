@@ -13,6 +13,7 @@ Plug 'mattn/emmet-vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mkitt/tabline.vim'
 Plug 'tpope/vim-fugitive'
+
 "Plug 'shougo/unite.vim'
 "Plug 'ujihisa/unite-colorscheme'
 Plug 'shougo/vimproc.vim', { 'do': 'make' }
@@ -28,10 +29,10 @@ Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
-"
+
 " colors {{{
 Plug 'christophermca/meta5'
-Plug 'zenorocha/dracula-theme', { 'rtp': 'vim' }
+Plug 'dracula/vim'
 Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 Plug 'reedes/vim-colors-pencil'
@@ -121,6 +122,7 @@ set noswapfile
 set splitbelow
 set splitright
 
+" always show tabline
 set showtabline=2
 
 set background=dark
@@ -151,14 +153,14 @@ let g:ctrlp_custom_ignore = {
   \ 'dir': '\v[\/](node_modules)$',
   \ }
 " }}}
-"
+
 " python {{{
 if has('python3')
   let g:pymode_python = 'python3'
 endif
 let g:pymode_folding = 0
 " }}}
-"
+
 " javascript {{{
 " jsx on js files
 let g:syntastic_javascript_checkers = ['eslint']
@@ -388,6 +390,7 @@ augroup ft_config
   au BufWritePre *.py,*.js,*.rb :silent! %s/\s\+$//
 
   au FileType vim setlocal foldmethod=marker
+  au BufNewFile,BufRead {.,}tmux*.conf* setfiletype config
 augroup END
 
 augroup reload_vimrc

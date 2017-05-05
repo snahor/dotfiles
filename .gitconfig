@@ -8,6 +8,7 @@
 [core]
   excludesfile = ~/.gitignore
   pager = less -+X -+F
+  editor = nvim
 
 [alias]
   ci = commit

@@ -9,30 +9,80 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+
 Plug 'mattn/emmet-vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mkitt/tabline.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+"Plug 'tpope/vim-repeat'
+Plug 'junegunn/vim-easy-align'
 
-"Plug 'shougo/unite.vim'
-"Plug 'ujihisa/unite-colorscheme'
-Plug 'shougo/vimproc.vim', { 'do': 'make' }
-"Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'jpalardy/vim-slime'
+
+" snipmate {{{
+Plug 'marcweber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+" }}}
+
+Plug 'honza/vim-snippets'
+
+" move lines
+Plug 'matze/vim-move'
+
+" Plug 'terryma/vim-multiple-cursors'
+
+" window auto resizing
+Plug 'roman/golden-ratio'
+
+" Plug 'shougo/unite.vim'
+" Plug 'ujihisa/unite-colorscheme'
+" Plug 'bfredl/nvim-ipy'
+
+Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" async lint engine
+Plug 'w0rp/ale'
+
+" langs/syntax {{{
+" Plug 'klen/python-mode', { 'for': 'python' }
+
+" vim-polyglot already packs:
 Plug 'fatih/vim-go', { 'for': 'go' }
+" Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+" Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
+" Plug 'lambdatoast/elm.vim', { 'for': 'elm' }
+" Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
+Plug 'sheerun/vim-polyglot'
 Plug 'cypok/vim-sml', { 'for': 'sml' }
-Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug 'stephpy/vim-yaml', { 'for': 'yaml' }
+" haskell {{{
+Plug 'shougo/vimproc.vim', { 'do': 'make' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-"Plug 'scrooloose/syntastic', { 'for': 'javascript' }
-"Plug 'lervag/vimtex', { 'for': 'tex' }
-"Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
+" }}}
 
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
-Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+" Plug 'scrooloose/syntastic', { 'for': 'javascript' }
+" Plug 'lervag/vimtex', { 'for': 'tex' }
+" Plug 'OmniSharp/omnisharp-vim', { 'for': 'csharp' }
+" Plug 'lervag/vimtex'
+
+" javascript es6, es7
+" Plug 'othree/yajs.vim', { 'for': 'javascript' }
+" Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+" Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }
+
+" Plug 'sombr/vim-scala-worksheet'
+
+" conceals lambda functions
+" Plug 'calebsmith/vim-lambdify'
+
+" }}}
 
 " colors {{{
 Plug 'christophermca/meta5'
-Plug 'dracula/vim'
+Plug 'dracula/vim', { 'as': 'dracula-colorscheme' }
 Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 Plug 'reedes/vim-colors-pencil'
@@ -49,11 +99,19 @@ Plug 'ewilazarus/preto'
 Plug 'MaxSt/FlatColor'
 Plug 'andreasvc/vim-256noir'
 Plug 'wellsjo/wellsokai.vim'
-Plug 'DrowsySaturn/VIvid.vim'
 Plug 'baskerville/bubblegum'
 Plug 'pbrisbin/vim-colors-off'
 Plug 'w0ng/vim-hybrid'
-" }}}
+Plug 'vim-scripts/color-scheme-Faded-Black'
+Plug 'vim-scripts/ChocolateLiquor'
+Plug 'fcpg/vim-fahrenheit'
+Plug 'andreasvc/vim-256noir'
+Plug 'tyrannicaltoucan/vim-quantum'
+Plug 'dcapo/friendly-colors'
+Plug 'vim-scripts/chlordane.vim'
+Plug 'sonph/onehalf', { 'rtp': 'vim/' }
+"  }}}
+
 call plug#end()
 
 syntax on
@@ -125,14 +183,10 @@ set splitright
 " always show tabline
 set showtabline=2
 
-set background=dark
-"colorscheme dracula
-"colorscheme onedark
-"colorscheme hemisu
-"colorscheme flatcolor
-"colorscheme pencil
-"colorscheme bubblegum
-colorscheme off
+" folding {{{
+set foldclose=all
+"set foldlevelstart=99
+" }}}
 
 " silver searcher {{{
 if executable('ag')
@@ -171,55 +225,64 @@ let g:config_Beautifier = {
 \    'trim_trailing_whitespace': 'true',
 \    'indent_style': 'space',
 \    'end_of_line': 'lf',
+\    'wrap_attributes_indent_size': 4,
+\    
 \  }
 \}
 " }}}
 
-function! ToggleComment()
-  if len(getline('.')) == 0
-    return
-  endif
+" polyglot {{{
+let g:polyglot_disabled = ['go', 'yaml', 'python']
+"let g:javascript_conceal_arrow_function = "⇒"
+" }}}
 
-  let comment_leader = get({
-  \  'vim': '"',
-  \  'python': '#',
-  \  'ruby': '#',
-  \  'sh': '#',
-  \  'yaml': '#',
-  \  'conf': '#',
-  \  'dockerfile': '#',
-  \  'gitcommit': '#',
-  \  'make': '#',
-  \  'haskell': '--',
-  \  'sql': '--',
-  \  'tex': '%',
-  \  'mail': '>',
-  \  'scheme': ';',
-  \  'gitconfig': '#',
-  \}, &filetype, '//')
+" slime
+let g:slime_target = 'tmux'
+" let g:slime_paste_file = tempname()
+" let g:slime_paste_file = '/tmp/.slime'
+let g:slime_default_config = {"socket_name": "default", "target_pane": ":.2"}
+let g:slime_python_ipython = 1
 
-  let uncomment = matchstr(getline('.'), '^\s*' . comment_leader) != ''
+setglobal commentstring=#\ %s
 
-  if uncomment
-    execute ":silent! normal :nohl\<CR>:s/\<C-R>=escape(comment_leader, '\/')\<CR>//\<CR>:nohl\<CR>"
-  else
-    execute ":silent! normal ^i\<C-R>=comment_leader\<CR>\<ESC>\<down>^"
-  endif
-endfunction
+" function! Strip(s)
+"   return substitute(a:s, '\v\s*(.*)\s*', '\1', '')
+" endfunction
+
+" function! ToggleComment()
+"   if len(getline('.')) == 0
+"     return
+"   endif
+
+"   let chars = split(&commentstring, '%s')
+"   if len(chars) == 1
+"     let comment_leader = Strip(chars[0])
+"   endif
+
+"   let uncomment = matchstr(getline('.'), '^\s*' . comment_leader) != ''
+
+"   if uncomment
+"     execute ":silent! normal :nohl\<CR>:s/\<C-R>=escape(comment_leader, '\/')\<CR>//\<CR>:nohl\<CR>"
+"   else
+"     execute ":silent! normal ^i\<C-R>=comment_leader\<CR>\<ESC>\<down>^"
+"   endif
+" endfunction
+
+let s:modes = {
+\ 'i': 'INSERT',
+\ 'v': 'VISUAL',
+\ 'n': 'NORMAL',
+\ 'R': 'REPLACE',
+\ 'V': 'V-LINE',
+\ 't': 'TERMINAL',
+\}
 
 function! CurrentMode()
   let current_mode = mode()
-  return get({
-    \ 'i': 'INSERT',
-    \ 'v': 'VISUAL',
-    \ 'n': 'NORMAL',
-    \ 'R': 'REPLACE',
-    \ 'V': 'V-LINE',
-    \ 't': 'TERMINAL',
-    \}, current_mode, current_mode)
+  return get(s:modes, current_mode, current_mode)
 endfunction
 
-function! ColorfulStatutLine()
+function! SetUpStatusLine()
   set statusline=
 
   " mode
@@ -243,16 +306,6 @@ function! ColorfulStatutLine()
 
   " percentage : line number : col number
   set statusline+=%6*%(\ %p%%\ :\ %l\ :\ %c\ %)
-
-  "hi User1 guibg=#E74C3C guifg=#ffffff ctermbg=1
-  "hi User2 guibg=#E67E22 guifg=#ffffff ctermbg=166
-  "hi User3 guibg=#F1C40F guifg=#ffffff ctermbg=9
-  "hi User4 guibg=#34495E guifg=#ffffff ctermbg=18
-  "hi User5 guibg=#9B59B6 guifg=#ffffff ctermbg=129
-  "hi User6 guibg=#3498DB guifg=#ffffff ctermbg=26
-  "hi User7 guibg=#2ECC71 guifg=#ffffff ctermbg=9
-  "hi User8 guibg=#1ABC9C guifg=#ffffff ctermbg=36
-  "hi User9 guibg=#95A5A6 guifg=#ffffff ctermbg=9
 endfunction
 
 function! ChangeFontSize(action)
@@ -283,6 +336,15 @@ function! ToggleBackground()
   execute 'set background='.{'dark': 'light', 'light': 'dark'}[&background]
 endfunction
 
+function! RenameFile(new_name)
+  let old_name = expand('%')
+  if a:new_name && a:new_name != old_name
+    exec 'saveas ' . a:new_name
+    exec 'silent !rm ' . old_name
+    !redraw
+  endif
+endfunction
+
 if has('gui_running')
   let height = GetDisplayResolution()[0]
   let font_size = 10
@@ -305,8 +367,8 @@ endif
 nmap <silent><Leader><Leader> :let @/ = ""<CR>
 
 " comments
-xnoremap <silent><Leader>cc :call ToggleComment()<Return>
-nnoremap <silent><Leader>cc :call ToggleComment()<Return>
+" xnoremap <silent><Leader>cc :call ToggleComment()<Return>
+" nnoremap <silent><Leader>cc :call ToggleComment()<Return>
 
 " move between splits
 nnoremap <C-j> <C-w><C-j>
@@ -349,8 +411,25 @@ nmap <silent> <leader>ev :e $MYVIMRC<cr>
 nmap <silent> <leader>eh :e /etc/hosts<cr>
 nmap <silent> <leader>sv :source $MYVIMRC<cr>
 
+" save
+nmap <silent> <leader>s :w<cr>
+
+" quit
+nmap <silent> <leader>q :q<cr>
+
+augroup go_bindings
+  au FileType go nmap <leader>r <Plug>(go-run)
+  au FileType go nmap <leader>b <Plug>(go-build)
+  au FileType go nmap <leader>t <Plug>(go-test)
+  au FileType go nmap <leader>c <Plug>(go-coverage)
+augroup END
+
 " folding
 vnoremap <silent> <leader>f :fold<cr>
+
+command! Q q
+command! W w
+command! Wq wq
 
 if is_nvim
   let h = winheight(0) * 0.35
@@ -382,20 +461,22 @@ augroup ft_config
   au FileType jinja setlocal syntax=OFF
   au FileType python setlocal shiftwidth=4 softtabstop=4 nosmartindent
   au FileType go setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-  au FileType c setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
-  "au FileType java setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab
   au FileType java setlocal nosmartindent noexpandtab
+  au FileType c setlocal shiftwidth=4 softtabstop=4 tabstop=4 nosmartindent noexpandtab commentstring=//\ %s
+
+  au FileType sml setlocal commentstring=(*\ %s\ *)
+  au FileType javascript* setlocal commentstring=//\ %s
 
   au BufRead,BufNewFile *.es6 setfiletype javascript
   au BufWritePre *.py,*.js,*.rb :silent! %s/\s\+$//
 
-  au FileType vim setlocal foldmethod=marker
+  au FileType vim setlocal foldmethod=marker foldlevelstart=0
   au BufNewFile,BufRead {.,}tmux*.conf* setfiletype config
 augroup END
 
 augroup reload_vimrc
   au!
-  au BufWritePost .vimrc,.nvimrc so $MYVIMRC
+  au BufWritePost $MYVIMRC so $MYVIMRC
 augroup END
 
 if !is_nvim
@@ -403,6 +484,18 @@ if !is_nvim
   autocmd VimResized * wincmd =
 endif
 
-call ColorfulStatutLine()
+call SetUpStatusLine()
 
+set background=dark
+" colorscheme {{{
+" colorscheme dracula
+" colorscheme hemisu
+colorscheme onedark
+" colorscheme flatcolor
+" colorscheme pencil
+" colorscheme bubblegum
+" colorscheme off
+" colorscheme plum
+" colorscheme onehalflight
+" }}}
 set autochdir

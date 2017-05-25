@@ -16,13 +16,26 @@
   co = checkout
   br = branch
   df = diff
-  pretty-log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  pretty-log = log --graph \
+               --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' \
+               --abbrev-commit --date=relative
   who = shortlog -s --
-  serve = daemon --reuseaddr --verbose --base-path=. --export-all .
-  serve-rp = daemon --reuseaddr --verbose --base-path=. --export-all --enable=receive-pack .
-  untracked = ls-files --other --exclude-standard
-  ignored = ls-files --ignored --exclude-standard --others
-
+  serve = daemon \
+          --reuseaddr \
+          --verbose \
+          --base-path=. \
+          --export-all
+  # writeable
+  serve-w = !git serve --enable=receive-pack
+  untracked = ls-files --others --exclude-standard
+  ignored = !git untracked --ignored
+  # ty tim pettersen
+  alias = "!f() { \
+            if [ \"$#\" -ne 2 ]; then \
+              echo >&2 \"Usage: git alias <name> <command>\"; exit 1; \
+            fi; \
+            git config --global alias.\"$1\" \"$2\"; \
+          }; f"
 [diff]
   tool = nvim -d
 

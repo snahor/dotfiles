@@ -1,20 +1,3 @@
-# Path to your oh-my-fish.
-set fish_path $HOME/.oh-my-fish
-
-# Theme
-set fish_theme robbyrussell
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-fish/plugins/*)
-# Custom plugins may be added to ~/.oh-my-fish/custom/plugins/
-# Example format: set fish_plugins autojump bundler
-set fish_plugins tmux
-
-# Path to your custom folder (default path is $FISH/custom)
- #set fish_custom $HOME/dotfiles/oh-my-fish
-
-# Load oh-my-fish configuration.
-#. $fish_path/oh-my-fish.fish
-
 # My aliases
 . ~/.config/fish/aliases.fish
 
@@ -26,6 +9,7 @@ set fish_plugins tmux
 
 # fuck you caps
 setxkbmap -option caps:ctrl_modifier
+xcape -e 'Caps_Lock=Escape'
 
 # No message plz.
 set fish_greeting ""
@@ -61,18 +45,21 @@ function fish_prompt
   set -l normal (set_color normal)
   #set -l prompt "➜"
   set -l prompt "𝝺"
-  #set -l prompt "😀 "
+  #set -l prompt ❯❯
+  set arrow "$green$prompt"
+  
+  #if test $last_status = 0
+  #set arrow "$green$prompt"
+  #else
+  #set arrow "$red$propmt"
+  #end
 
-  if test $last_status = 0
-      set arrow "$green$prompt"
-  else
-      set arrow "$red$propmt"
-  end
   set -l cwd $cyan(basename (prompt_pwd))
 
   if [ (_git_branch_name) ]
     set -l git_branch $red(_git_branch_name)
-    set git_info "$blue git:($git_branch$blue)"
+    set git_info " [$git_branch$blue]"
+    #set git_info "$blue git:($git_branch$blue)"
 
     if [ (_is_git_dirty) ]
       set -l dirty "$yellow ✗ "

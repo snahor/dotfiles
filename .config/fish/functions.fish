@@ -1,5 +1,3 @@
-# vim: ft=sh
-
 function slugify
   echo $argv[1] | tr " " - | tr "," -
 end
@@ -10,7 +8,7 @@ function sound
 end
 
 
-function random_string
+function random_string -d 'Generate a random string given a length'
   set -l length $argv[1]
   apg -m $length -a1 -n1
 end
@@ -51,6 +49,7 @@ function log
 
   set_color -b $color; echo $argv[2..(count $argv)]
 end
+
 
 function publicip
   set -l ip
@@ -123,10 +122,12 @@ function __workon_py
   end
 end
 
+
 function __workon_directories
   ls -l $HOME/projects/ | grep '^d' | awk '{ print \$9 }'
   ls -l $GOPATH/src/github.com/snahor/ | grep '^d' | awk '{ print \$9 }'
 end
+
 
 function workon
   if test -d $HOME/projects/$argv[1]
@@ -135,6 +136,7 @@ function workon
     cd $GOPATH/src/github.com/snahor/$argv[1]
   end
 end
+
 
 function mkvenv
   set -l venv_name
@@ -161,12 +163,45 @@ function rmvenv
   rm -rf ~/projects/$argv[1]/{lib,bin,include,local}
 end
 
+
 function hgrep
-  history | grep -v grep | grep -i $argv[1] | sort | uniq
+  history | grep -v grep | grep -i $argv[1] | sort | uniq | less
 end
+
 
 function docker_ssh
   docker exec -i -t $argv[1] bash
+end
+
+
+function treeish
+  set -l depth 1
+  set -l dir
+  set -l num_args (count $argv)
+
+  if test $num_args = 1
+    set depth $argv[1]
+  end
+
+  #if math "$num_args > 0" > /dev/null
+    #set depth $argv[1]
+  #end
+
+  tree --dirsfirst -ChFLQ  $depth $dir
+end
+
+
+function search_and_replace
+  ag $argv[1] -l | xargs perl -pi -e "s/$argv[1]/$argv[2]/g"
+end
+
+function ihazinternets
+  ping -q -c 1 -W 1 8.8.8.8 > /dev/null ^&1
+  if test $status = 0
+    echo 'yay 😊'
+  else
+    echo 'nope 😭'
+  end
 end
 
 #complete -x -c workon -f -n '__workon_directories'

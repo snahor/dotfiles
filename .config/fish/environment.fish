@@ -1,7 +1,8 @@
 #!/usr/bin/env fish
 
-set -gx EDITOR vim
+set -gx EDITOR nvim
 set -gx TERM "xterm-256color"
+set -gx CDPATH . ~
 
 # check tmux
 if test $TMUX
@@ -24,18 +25,25 @@ _add_to_path $HOME/Applications/sbt/bin
 _add_to_path $HOME/Applications/LightTable
 
 # latex
-if test -d ~/texlive/2013
-  set -gx INFOPATH $HOME/texlive/2013/texmf-dist/doc/info $INFOPATH
-  set -gx MANPATH "" $HOME/texlive/2013/texmf-dist/doc/man
-  set -gx PATH $HOME/texlive/2013/bin/x86_64-linux $PATH
+begin
+  set -lx TEXLIVE_PATH ~/.local/texlive/2015
+  if test -d $TEXLIVE_PATH
+    set -gx INFOPATH $TEXLIVE_PATH/texmf-dist/doc/info $INFOPATH
+    # set -gx MANPATH "" $TEXLIVE_PATH/texmf-dist/doc/man
+    set -gx PATH $TEXLIVE_PATH/bin/x86_64-linux $PATH
+  end
 end
 
-# go
-_add_to_path /usr/local/go/bin
-if test -d $HOME/go
-  set -gx GOPATH $HOME/go
+# go {{{
+#_add_to_path /usr/local/go/bin
+set -gx GOROOT /usr/lib/go-1.7
+_add_to_path $GOROOT/bin
+
+if test -d $HOME/projects/go
+  set -gx GOPATH $HOME/projects/go
   set -gx PATH $GOPATH/bin $PATH
 end
+# }}}
 
 # cabal
 _add_to_path $HOME/.cabal/bin $PATH

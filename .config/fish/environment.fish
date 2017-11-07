@@ -1,84 +1,51 @@
-#!/usr/bin/env fish
-
 set -gx EDITOR nvim
 set -gx TERM "xterm-256color"
 set -gx CDPATH . ~
 
 # check tmux
 if test $TMUX
-  set -gx TERM "screen-256color"
+  # set -gx TERM "screen-256color"
+  set -gx TERM "screen-256color-bce"
 end
 
-function _add_to_path
-  if test -d $argv[1]
-    set -gx PATH $argv[1] $PATH
-  end
+function __add_to_path --argument path
+    if test -d "$path"; and not contains $path $PATH
+        set -gx PATH $path $PATH
+    end
 end
-
-# locals
-_add_to_path $HOME/.local/bin
-
-# sbt
-_add_to_path $HOME/Applications/sbt/bin
-
-# LightTable
-_add_to_path $HOME/Applications/LightTable
 
 # latex
 begin
-  set -lx TEXLIVE_PATH ~/.local/texlive/2015
-  if test -d $TEXLIVE_PATH
-    set -gx INFOPATH $TEXLIVE_PATH/texmf-dist/doc/info $INFOPATH
-    # set -gx MANPATH "" $TEXLIVE_PATH/texmf-dist/doc/man
-    set -gx PATH $TEXLIVE_PATH/bin/x86_64-linux $PATH
-  end
+    set -lx TEXLIVE_PATH ~/.local/texlive/2015
+    if test -d "$TEXLIVE_PATH"
+        set -gx INFOPATH $TEXLIVE_PATH/texmf-dist/doc/info $INFOPATH
+        # set -gx MANPATH "" $TEXLIVE_PATH/texmf-dist/doc/man
+    end
+    __add_to_path $TEXLIVE_PATH/bin/x86_64-linux
 end
 
-# go {{{
-#_add_to_path /usr/local/go/bin
-set -gx GOROOT /usr/lib/go-1.7
-_add_to_path $GOROOT/bin
+# go
+set -gx GOROOT $HOME/.go
+set -gx GOPATH $HOME/projects/go
+__add_to_path $GOROOT/bin
+__add_to_path $GOPATH/bin
 
-if test -d $HOME/projects/go
-  set -gx GOPATH $HOME/projects/go
-  set -gx PATH $GOPATH/bin $PATH
-end
-# }}}
+# locals
+__add_to_path $HOME/.local/bin
 
-# cabal
-_add_to_path $HOME/.cabal/bin $PATH
-
-_add_to_path /opt/cabal/1.22/bin
-_add_to_path /opt/ghc/7.10.3/bin
-
-# rbenv
-if test -d $HOME/.rbenv/bin
-  set -gx PATH $HOME/.rbenv/bin $PATH
-  . (rbenv init - | psub)
-end
-
-# nvm
-#if test -f $HOME/.config/fish/nvm-fish/nvm.fish
-if test -f $HOME/.config/fish/nvm.fish
-  set -gx NVM_DIR $HOME/.nvm
-  #. $HOME/.config/fish/nvm-fish/nvm.fish
-  . $HOME/.config/fish/nvm.fish
-end
+# sbt
+__add_to_path $HOME/Applications/sbt/bin
 
 # smlnj
-_add_to_path $HOME/smlnj/bin
+__add_to_path $HOME/vendor/smlnj/bin
 
 # racket
-_add_to_path $HOME/racket/bin
-
-# Heroku
-_add_to_path /usr/local/heroku/bin
+__add_to_path $HOME/vendor/racket/bin
 
 # app engine
-_add_to_path $HOME/google_appengine
-
-# elm
-_add_to_path $HOME/Elm-Platform/0.15/bin
+__add_to_path $HOME/google_appengine
 
 # coursera's algorithms course
-_add_to_path $HOME/algs4/bin
+__add_to_path $HOME/algs4/bin
+
+__add_to_path ~/Downloads/Popcorn-Time-0.3.10-Linux-64

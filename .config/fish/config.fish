@@ -1,71 +1,64 @@
-# My aliases
-. ~/.config/fish/aliases.fish
-
-# My functions
-. ~/.config/fish/functions.fish
-
-# My env vars
-. ~/.config/fish/environment.fish
-
-# fuck you caps
-setxkbmap -option caps:ctrl_modifier
-xcape -e 'Caps_Lock=Escape'
-
 # No message plz.
 set fish_greeting ""
 
-# OPAM configuration
-#. /home/hans/.opam/opam-init/init.fish > /dev/null 2> /dev/null or true
-#. ~/.opam/opam-init/variables.fish
+source ~/.config/fish/environment.fish
+source ~/.config/fish/functions.fish
 
-function _is_xterm
-  test -n $XTERM_VERSION
-end
+# fuck you caps
+setxkbmap -option caps:ctrl_modifier
+# xcape -e 'Caps_Lock=Escape'
 
-function _git_branch_name
-  echo (command git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
-end
+# reload this
+alias ss='source ~/.config/fish/config.fish'
 
-function _is_git_dirty
-  set -l show_untracked (git config --bool bash.showUntrackedFiles)
-  set untracked ''
-  if [ "$theme_display_git_untracked" = 'no' -o "$show_untracked" = 'false' ]
-    set untracked '--untracked-files=no'
-  end
-  echo (command git status -s --ignore-submodules=dirty $untracked ^/dev/null)
-end
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
 
-function fish_prompt
-  set -l last_status $status
-  set -l cyan (set_color -o cyan)
-  set -l yellow (set_color -o yellow)
-  set -l red (set_color -o red)
-  set -l blue (set_color -o blue)
-  set -l green (set_color -o green)
-  set -l normal (set_color normal)
-  #set -l prompt "➜"
-  set -l prompt "𝝺"
-  #set -l prompt ❯❯
-  set arrow "$green$prompt"
-  
-  #if test $last_status = 0
-  #set arrow "$green$prompt"
-  #else
-  #set arrow "$red$propmt"
-  #end
+abbr --add q exit
+abbr --add c clear
+abbr --add d deactivate
+abbr --add v nvim
+abbr --add ipy ipython
 
-  set -l cwd $cyan(basename (prompt_pwd))
+# abbr this?
+alias incognito 'google-chrome --incognito'
 
-  if [ (_git_branch_name) ]
-    set -l git_branch $red(_git_branch_name)
-    set git_info " [$git_branch$blue]"
-    #set git_info "$blue git:($git_branch$blue)"
+alias h='history | less'
+alias grep='grep --color=auto'
 
-    if [ (_is_git_dirty) ]
-      set -l dirty "$yellow ✗ "
-      set git_info "$git_info$dirty"
-    end
-  end
+alias ls   'ls --color=auto'
+alias ll   'ls -lhF'
+alias la   'ls -lhaF'
+alias l    'ls -CF'
+alias df   'df -h'
+alias ln   'ln -v'
+alias dirs "ll | grep '^d' | awk '{ print $9 }'"
 
-  echo -n -s $arrow ' ' $cwd $git_info $normal ' '
-end
+# utils
+alias num_lines='awk "END {print NR}"'
+alias psgrep='ps axu | grep -v grep | grep -i'
+alias nakedvim='vim -u NONE -N -c "set backspace=2"'
+alias sensors='watch -n3 sensors'
+alias pwgen='tr -dc A-Za-z0-9_ < /dev/urandom | head -c8'
+alias serve='python -m http.server'
+alias prettyjson='python -m json.tool'
+
+# git
+alias gs 'git status'
+abbr --add g   git
+abbr --add ga  git add
+abbr --add gp  git push
+abbr --add gc  git commit
+abbr --add gs  git status
+abbr --add gca git commit --amend
+abbr --add gd  git diff
+abbr --add gcm git checkout master
+abbr --add gl  git log
+abbr --add gco git checkout
+
+# poly/ml
+alias poly 'rlwrap poly'
+
+# smlnj
+alias smlnj 'rlwrap sml'
